@@ -63,12 +63,11 @@ mixin WatchElement on ComponentElement {
   }
 
   void unwatch<R extends Listenable>() {
-    final listeners = Map.of(_listeners);
-
-    for (final MapEntry(:key, :value) in listeners.entries) {
-      _listeners.remove(key);
+    for (final MapEntry(:key, :value) in _listeners.entries) {
       key.model.removeListener(value.callback);
     }
+
+    _listeners.clear();
   }
 
   @override
