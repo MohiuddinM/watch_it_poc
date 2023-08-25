@@ -36,7 +36,7 @@ mixin WatchElement on ComponentElement {
       }
 
       if (selector == null) {
-        unwatch(model);
+        unwatch();
         return markNeedsBuild();
       }
 
@@ -49,7 +49,7 @@ mixin WatchElement on ComponentElement {
       );
 
       if (selection != oldSelection) {
-        unwatch(model);
+        unwatch();
         markNeedsBuild();
       }
 
@@ -62,25 +62,18 @@ mixin WatchElement on ComponentElement {
     model.addListener(entry.callback);
   }
 
-  void unwatch<R extends Listenable>(R model) {
-    final listeners = Map.of(_listeners);
-
-    for (final MapEntry(:key, :value) in listeners.entries) {
-      if (key.model == model) {
-        _listeners.remove(key);
-        model.removeListener(value.callback);
-      }
-    }
-  }
-
-  @override
-  void unmount() {
+  void unwatch<R extends Listenable>() {
     final listeners = Map.of(_listeners);
 
     for (final MapEntry(:key, :value) in listeners.entries) {
       _listeners.remove(key);
       key.model.removeListener(value.callback);
     }
+  }
+
+  @override
+  void unmount() {
+    unwatch();
     super.unmount();
   }
 }
